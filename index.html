@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#092b36">
+  <meta name="description" content="Simulador práctico de planeación financiera para personas próximas al retiro. Un recurso educativo de Felicia Consultora.">
+  <title>Mi dinero, mi tranquilidad | Simulador para prepensionados</title>
+  <style>
+    :root { color-scheme: light; --ink:#12323b; --muted:#587078; --turq:#078d91; --deep:#092b36; --gold:#be9856; --bg:#f3f7f6; --white:#fff; --soft:#e8f5f3; --line:#dce7e7; --danger:#b93e43; --success:#126b59; --shadow:0 12px 35px rgba(15,45,50,.10); }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; font-family:Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color:var(--ink); background:var(--bg); line-height:1.48; }
+    button,input { font:inherit; }
+    button { cursor:pointer; }
+    button:focus-visible,input:focus-visible { outline:3px solid #cba051; outline-offset:2px; }
+    .hero { position:relative; background:linear-gradient(135deg,#092b36 0%, #0c4f5a 66%,#087b83 100%); color:white; overflow:hidden; padding:26px 18px 58px; }
+    .hero:after { content:""; position:absolute; height:255px; width:255px; border:45px solid rgba(224,194,129,.09); border-radius:50%; right:-105px; top:-125px; pointer-events:none; }
+    .container { width:min(100% - 28px, 980px); margin-inline:auto; }
+    .brand { display:flex; align-items:center; gap:10px; letter-spacing:.12em; text-transform:uppercase; font-size:.76rem; font-weight:800; }
+    .mark { width:28px; height:28px; border-radius:9px; background:linear-gradient(135deg,#3cc5c6,#e3c184); transform:rotate(-11deg); display:inline-block; }
+    .brand small { display:block; letter-spacing:.07em; font-weight:500; opacity:.8; text-transform:none; font-size:.63rem; }
+    .hero-copy { max-width:740px; margin-top:36px; }
+    .eyebrow { color:#e9cf9c; font-size:.79rem; letter-spacing:.13em; font-weight:700; text-transform:uppercase; }
+    h1 { font-size:clamp(2rem,6vw,3.25rem); line-height:1.08; letter-spacing:-.045em; margin:11px 0 15px; }
+    .hero p { max-width:620px; opacity:.87; font-size:1.02rem; margin:0; }
+    .hero-tag { display:inline-block; border:1px solid #ffffff50; border-radius:999px; padding:6px 13px; margin-top:20px; font-size:.8rem; color:#edfafa; }
+    .main { position:relative; margin-top:-31px; padding-bottom:32px; }
+    .card { background:white; border-radius:19px; padding:22px; border:1px solid var(--line); box-shadow:var(--shadow); margin-bottom:17px; }
+    h2 { margin:0; font-size:1.31rem; letter-spacing:-.025em; }
+    .section-head { margin-bottom:17px; }
+    .section-head p { margin:5px 0 0; color:var(--muted); font-size:.91rem; }
+    .privacy { font-size:.84rem; border-left:3px solid var(--turq); padding:9px 12px; background:#eef9f6; border-radius:5px 10px 10px 5px; color:#25565d; margin-top:15px; }
+    .form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .field { min-width:0; display:flex; flex-direction:column; gap:7px; }
+    .field label { font-weight:700; color:#39555d; font-size:.84rem; }
+    .peso-input { display:flex; align-items:center; border:1.5px solid #ccdede; border-radius:11px; background:#fcfefe; overflow:hidden; }
+    .peso-input span { color:#799095; padding-left:13px; font-weight:700; }
+    .peso-input input { min-width:0; width:100%; background:transparent; border:0; padding:12px 11px; color:var(--ink); font-weight:750; font-size:1.05rem; font-variant-numeric:tabular-nums; }
+    .peso-input:focus-within { border-color:var(--turq); box-shadow:0 0 0 2px #24ada91a; }
+    .tip { color:var(--muted); font-size:.78rem; }
+    .scenarios { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; }
+    .scenario { background:#f7fbfa; border:1.5px solid #d9e8e7; border-radius:12px; padding:12px 10px; text-align:left; color:var(--ink); min-height:88px; }
+    .scenario strong { display:block; font-size:.9rem; margin-bottom:4px; }
+    .scenario small { color:var(--muted); font-size:.76rem; }
+    .scenario[aria-pressed="true"] { border-color:var(--turq); background:#e6f7f4; box-shadow:inset 0 0 0 1px var(--turq); }
+    .expense-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:15px 13px; }
+    .results { background:linear-gradient(140deg,#092b36,#125b62); color:white; }
+    .results h2 { color:white; }
+    .results .section-head p { color:#c3e0df; }
+    .result-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+    .metric { border:1px solid #ffffff2c; border-radius:12px; padding:14px 11px; background:#ffffff0e; }
+    .metric span { display:block; font-size:.78rem; color:#c8dedd; }
+    .metric strong { display:block; font-size:clamp(.99rem, 2vw,1.38rem); margin-top:6px; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+    .metric.balance { background:#ffffff19; border-color:#ffffff52; }
+    .metric.balance.negative strong { color:#ffd1c9; }
+    .metric.balance.positive strong { color:#adf7df; }
+    .bar { width:100%; height:12px; border-radius:999px; background:#ffffff35; overflow:hidden; margin-top:18px; }
+    .bar-inner { height:100%; width:0; transition:width .22s ease; background:linear-gradient(90deg,#4fd6b5,#d7bc73); border-radius:999px; }
+    .bar-inner.over { background:linear-gradient(90deg,#e5b875,#e56569); }
+    #assessment { margin:13px 0 0; padding:12px 14px; border-radius:9px; background:#ffffff13; font-size:.93rem; }
+    .challenge { background:#fffcf6; border-color:#eadbc0; box-shadow:none; }
+    .challenge h2 { color:#674d26; }
+    .challenge p { margin:10px 0 0; color:#675a47; }
+    .steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+    .step { border:1px solid var(--line); background:#f9fcfb; border-radius:12px; padding:14px; }
+    .step span { color:var(--turq); font-weight:800; font-size:.78rem; }
+    .step strong { display:block; margin:5px 0; }
+    .step p { font-size:.82rem; color:var(--muted); margin:0; }
+    .actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .btn { border:1.5px solid var(--turq); padding:12px 17px; border-radius:10px; background:var(--turq); color:white; font-weight:800; }
+    .btn.secondary { color:var(--deep); background:white; border-color:#b9d0d1; }
+    .btn:hover { filter:brightness(.96); }
+    .footer { text-align:center; color:#6b858a; font-size:.8rem; padding:6px 20px 35px; }
+    .footmark { color:var(--turq); font-weight:850; letter-spacing:.08em; }
+    .pill { display:inline-block; border-radius:999px; font-size:.76rem; color:#145b57; background:#e0f4ed; padding:5px 9px; font-weight:700; }
+    @media (max-width:620px) {
+      .hero { padding-bottom:55px; } .hero-copy { margin-top:26px; }
+      .card { padding:17px 14px; border-radius:16px; }
+      .form-grid,.expense-grid { grid-template-columns:1fr; }
+      .scenarios { grid-template-columns:1fr; }
+      .scenario { min-height:auto; }
+      .result-grid { grid-template-columns:1fr 1fr; }
+      .metric.balance { grid-column:1 / -1; }
+      .steps { grid-template-columns:1fr; }
+      .actions button { width:100%; }
+    }
+    @media print {
+      body { background:white; } .hero { background:white!important; color:#092b36; padding:8px 0; } .hero p,.hero-tag,.hero .eyebrow { color:#092b36; } .hero:after { display:none; }
+      .hero h1 { font-size:24px; }.main { margin-top:0; } .card { break-inside:avoid; box-shadow:none; border:1px solid #ccc; margin:10px 0; padding:12px; }
+      .results { background:white!important; color:#092b36; } .results h2,.results .metric span,.results .section-head p { color:#092b36; }
+      .metric,.metric.balance { border:1px solid #ccc; background:white; } .metric strong,.metric.balance.positive strong,.metric.balance.negative strong { color:#092b36; }
+      .scenarios,.actions,.privacy,.tip,.bar,.challenge { display:none; } .peso-input { border:0; } .peso-input input { padding:0; }
+      .footmark { color:#092b36; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero"><div class="container">
+    <div class="brand"><span class="mark" aria-hidden="true"></span><div>FELICIA<small>Consultora · Empresas felices</small></div></div>
+    <div class="hero-copy">
+      <div class="eyebrow">Taller de planeación financiera · Prepensionados</div>
+      <h1>Mi dinero.<br>Mi tranquilidad.<br>Mi nueva etapa.</h1>
+      <p>Descubre cómo podría funcionar tu presupuesto después del retiro. Ajusta los valores, explora escenarios y toma decisiones informadas.</p>
+      <span class="hero-tag">Experiencia interactiva · Funciona en tu celular</span>
+    </div>
+  </div></header>
+  <main class="container main">
+    <section class="card" aria-labelledby="incomes-title">
+      <div class="section-head"><h2 id="incomes-title">01. ¿Con cuánto contaré?</h2><p>Comienza con un ejemplo ficticio o escribe tus propias cifras mensuales estimadas.</p></div>
+      <div class="form-grid">
+        <div class="field"><label for="pension">Mesada pensional neta proyectada</label><div class="peso-input"><span>$</span><input id="pension" type="number" inputmode="numeric" min="0" max="1000000000" step="50000" value="3300000" aria-describedby="pension-tip"></div><small id="pension-tip" class="tip">El valor disponible después de descuentos aplicables.</small></div>
+        <div class="field"><label for="otherIncome">Otros ingresos mensuales netos</label><div class="peso-input"><span>$</span><input id="otherIncome" type="number" inputmode="numeric" min="0" max="1000000000" step="50000" value="0"></div><small class="tip">Arriendos, actividades económicas u otros ingresos habituales.</small></div>
+      </div>
+      <p class="privacy"><strong>Privacidad:</strong> el simulador no envía tus cifras a Felicia ni a ningún servidor. Los datos se guardan únicamente en este navegador para que puedas continuar el ejercicio. Si el dispositivo es compartido, pulsa “Borrar mis cifras”.</p>
+    </section>
+    <section class="card" aria-labelledby="expenses-title">
+      <div class="section-head"><h2 id="expenses-title">02. ¿Cómo distribuiré mis gastos?</h2><p>Modifica cada categoría según lo que esperas gastar al mes después de pensionarte.</p></div>
+      <div class="expense-grid" id="expense-fields"></div>
+    </section>
+    <section class="card" aria-labelledby="scenarios-title">
+      <div class="section-head"><h2 id="scenarios-title">03. ¿Qué pasaría si...?</h2><p>Selecciona una situación para ver cómo cambia tu presupuesto.</p></div>
+      <div class="scenarios" role="group" aria-label="Escenarios de presupuesto">
+        <button class="scenario" data-scenario="normal" aria-pressed="true"><strong>☀️ Un mes normal</strong><small>Solo los gastos que planeaste.</small></button>
+        <button class="scenario" data-scenario="emergency" aria-pressed="false"><strong>⚡ Gasto inesperado</strong><small>Una emergencia de $800.000.</small></button>
+        <button class="scenario" data-scenario="health" aria-pressed="false"><strong>❤ Más gastos de salud</strong><small>Un gasto extra de $350.000 al mes.</small></button>
+      </div>
+    </section>
+    <section class="card results" aria-labelledby="results-title" aria-live="polite">
+      <div class="section-head"><h2 id="results-title">04. Tu presupuesto proyectado</h2><p>Así se ve tu balance mensual para el escenario seleccionado.</p></div>
+      <div class="result-grid">
+        <div class="metric"><span>Ingresos netos</span><strong id="result-income">$ 0</strong></div>
+        <div class="metric"><span>Gastos + escenario</span><strong id="result-expenses">$ 0</strong></div>
+        <div class="metric balance" id="balance-box"><span>Saldo disponible</span><strong id="result-balance">$ 0</strong></div>
+      </div>
+      <div class="bar" role="progressbar" aria-label="Porcentaje de ingresos comprometidos" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar-inner" id="bar-inner"></div></div>
+      <p id="assessment"></p>
+    </section>
+    <section class="card challenge" aria-labelledby="challenge-title"><span class="pill">Reto para trabajar en pareja</span><h2 id="challenge-title" style="margin-top:9px">¿Cómo liberarías $300.000 al mes?</h2><p>Sin descuidar salud, alimentación ni vivienda, busca ajustes realistas. Prueba el escenario de emergencia y observa si tu plan tiene capacidad de respuesta.</p></section>
+    <section class="card" aria-labelledby="action-title"><div class="section-head"><h2 id="action-title">05. Mi decisión para los próximos 90 días</h2><p>Conecta tus cifras con una acción concreta. Estas ideas te ayudan a cerrar el ejercicio.</p></div>
+      <div class="steps"><div class="step"><span>30 DÍAS</span><strong>Conocer mis cifras</strong><p>Confirmar mi proyección de pensión y registrar mis gastos reales.</p></div><div class="step"><span>60 DÍAS</span><strong>Ordenar mis decisiones</strong><p>Revisar gastos no esenciales y el costo de mis deudas.</p></div><div class="step"><span>90 DÍAS</span><strong>Proteger mi tranquilidad</strong><p>Avanzar en un fondo de emergencia acorde con mis necesidades.</p></div></div>
+    </section>
+    <section class="card" aria-label="Acciones del simulador">
+      <div class="actions"><button class="btn" id="printBtn">Imprimir o guardar en PDF</button><button class="btn secondary" id="sampleBtn">Volver al ejemplo</button><button class="btn secondary" id="clearBtn">Borrar mis cifras</button></div>
+      <p class="tip">El botón “Imprimir o guardar en PDF” utiliza las opciones disponibles en tu dispositivo. El simulador es educativo; no calcula derechos pensionales ni sustituye la información oficial de tu administradora.</p>
+    </section>
+  </main>
+  <footer class="footer"><strong class="footmark">FELICIA CONSULTORA</strong> · Una nueva etapa para vivir con bienestar y autonomía.<br>Diseñado para educación financiera, no para asesoría financiera individual.</footer>
+  <script>
+  (function () {
+    "use strict";
+    const categories=[
+      {key:"vivienda",label:"Vivienda y servicios",base:900000},
+      {key:"alimentacion",label:"Alimentación",base:800000},
+      {key:"salud",label:"Salud y medicamentos",base:350000},
+      {key:"transporte",label:"Transporte",base:300000},
+      {key:"deudas",label:"Deudas",base:650000},
+      {key:"familia",label:"Apoyo familiar",base:400000},
+      {key:"recreacion",label:"Recreación y otros",base:400000},
+      {key:"ahorro",label:"Ahorro mensual",base:0}
+    ];
+    const sample={pension:3300000,otherIncome:0,scenario:"normal",expenses:Object.fromEntries(categories.map(c=>[c.key,c.base]))};
+    const storageKey="felicia_simulador_prepensionados_v1";
+    const root=document.getElementById("expense-fields");
+    const currency=new Intl.NumberFormat("es-CO",{style:"currency",currency:"COP",maximumFractionDigits:0});
+    function num(v){const n=Number(v);return Number.isFinite(n)&&n>=0?Math.min(Math.round(n),1000000000):0;}
+    function retrieve(){try{const raw=localStorage.getItem(storageKey);if(!raw)return structuredClone(sample);const d=JSON.parse(raw);return {pension:num(d.pension),otherIncome:num(d.otherIncome),scenario:["normal","emergency","health"].includes(d.scenario)?d.scenario:"normal",expenses:Object.fromEntries(categories.map(c=>[c.key,num(d.expenses?.[c.key]??c.base)]))};}catch(e){return structuredClone(sample);}}
+    let state=retrieve();
+    for(const c of categories){const el=document.createElement("div");el.className="field";el.innerHTML='<label for="exp-'+c.key+'">'+c.label+'</label><div class="peso-input"><span>$</span><input id="exp-'+c.key+'" type="number" min="0" max="1000000000" step="50000" inputmode="numeric" value="'+state.expenses[c.key]+'"></div>';root.appendChild(el);el.querySelector("input").addEventListener("input",event=>{state.expenses[c.key]=num(event.target.value);draw();});}
+    const pension=document.getElementById("pension"),otherIncome=document.getElementById("otherIncome");
+    pension.value=state.pension;otherIncome.value=state.otherIncome;
+    pension.addEventListener("input",e=>{state.pension=num(e.target.value);draw();});
+    otherIncome.addEventListener("input",e=>{state.otherIncome=num(e.target.value);draw();});
+    for(const b of document.querySelectorAll("[data-scenario]"))b.addEventListener("click",()=>{state.scenario=b.dataset.scenario;draw();});
+    function save(){try{localStorage.setItem(storageKey,JSON.stringify(state));}catch(e){/* File and private modes may forbid persistence; simulator still works. */}}
+    function draw(){
+      const incomes=state.pension+state.otherIncome;
+      const extra=state.scenario==="emergency"?800000:state.scenario==="health"?350000:0;
+      const spent=Object.values(state.expenses).reduce((a,b)=>a+b,0)+extra;
+      const bal=incomes-spent;
+      document.getElementById("result-income").textContent=currency.format(incomes);
+      document.getElementById("result-expenses").textContent=currency.format(spent);
+      document.getElementById("result-balance").textContent=(bal<0?"−":"")+currency.format(Math.abs(bal));
+      const b=document.getElementById("balance-box"); b.classList.toggle("negative",bal<0);b.classList.toggle("positive",bal>=0);
+      const pct=incomes>0?spent/incomes*100:(spent>0?100:0);
+      document.getElementById("bar-inner").style.width=Math.min(100,pct)+"%";
+      document.getElementById("bar-inner").classList.toggle("over",spent>incomes);
+      document.querySelector(".bar").setAttribute("aria-valuenow",String(Math.round(Math.min(100,pct))));
+      const text=bal<0?"Tus gastos exceden los ingresos en "+currency.format(-bal)+". Revisa tus compromisos y busca ajustes antes del retiro.":bal===0?"Tu presupuesto está justo: no queda un margen adicional para imprevistos. Considera ajustes o una reserva.":"Tu saldo positivo es "+currency.format(bal)+". Evalúa cuánto destinarás a una reserva para gastos imprevistos.";
+      document.getElementById("assessment").textContent=text;
+      for(const c of document.querySelectorAll("[data-scenario]"))c.setAttribute("aria-pressed",String(c.dataset.scenario===state.scenario));
+      save();
+    }
+    function setAll(next){state=structuredClone(next);pension.value=state.pension;otherIncome.value=state.otherIncome;for(const c of categories)document.getElementById("exp-"+c.key).value=state.expenses[c.key];draw();}
+    document.getElementById("sampleBtn").addEventListener("click",()=>{if(confirm("¿Deseas reemplazar tus cifras con el ejemplo ficticio?"))setAll(sample);});
+    document.getElementById("clearBtn").addEventListener("click",()=>{if(confirm("¿Quieres borrar tus cifras guardadas en este navegador?")){try{localStorage.removeItem(storageKey);}catch(e){}setAll({pension:0,otherIncome:0,scenario:"normal",expenses:Object.fromEntries(categories.map(c=>[c.key,0]))});}});
+    document.getElementById("printBtn").addEventListener("click",()=>window.print());
+    draw();
+  })();
+  </script>
+</body>
+</html>
+
